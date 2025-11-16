@@ -1,5 +1,5 @@
 """
-Benchmark các thuật toán đường đi:
+Benchmark cho 4 thuật toán:
 - Dijkstra với transfer penalty
 - A* với transfer penalty
 - Bidirectional A*
@@ -7,60 +7,78 @@ Benchmark các thuật toán đường đi:
 """
 
 import time
+
 from algorithms.dijkstra import dijkstra_with_penalty
 from algorithms.a_star import a_star_with_penalty
 from algorithms.bidirectional_a_star import bidirectional_a_star_with_penalty
 from algorithms.alt_a_star import alt_a_star_with_penalty
 
-def benchmark_algorithm(G, start_node, goal_node, algo_name, landmarks=None, landmark_distances=None):
-    """
-    Chạy 1 thuật toán, đo thời gian, số node mở rộng, tổng cost, chiều dài path.
-    """
+
+def compute_total_cost(G, path):
+    """Tính tổng chi phí = sum(edge_weight) + sum(transfer_penalty)."""
+    if not path or len(path) < 2:
+        return 0
+
+    total = 0
+    for i in range(len(path) - 1):
+        total += G[path[i]][path[i + 1]].get("weight", 1)
+    return total
+
+
+def benchmark_algorithm(G, start_node, goal_node, algo_name,
+                        landmarks=None, landmark_distances=None):
+
     start_time = time.time()
 
+    # === chạy thuật toán ===
     if algo_name == "dijkstra":
-        path, visited, edges = dijkstra_with_penalty(G, start_node, goal_node)
-    elif algo_name == "a_star":
-        path, visited, edges = a_star_with_penalty(G, start_node, goal_node)
-    elif algo_name == "bi_a_star":
-        path, visited, edges = bidirectional_a_star_with_penalty(G, start_node, goal_node)
+        path, visited, _ = dijkstra_with_penalty(G, start_node, goal_node)
+
+    elif algo_name == "astar":
+        path, visited, _ = a_star_with_penalty(G, start_node, goal_node)
+
+    elif algo_name == "bi_astar":
+        path, visited, _ = bidirectional_a_star_with_penalty(G, start_node, goal_node)
+
     elif algo_name == "alt":
-        dist_L_to_v, dist_v_to_L = landmark_distances
-        path, visited, edges = alt_a_star_with_penalty(
-            G, start_node, goal_node, algo_name,
-            landmarks=landmarks,
-            dist_L_to_v=dist_L_to_v,
-            dist_v_to_L=dist_v_to_L
+        path, visited, _ = alt_a_star_with_penalty(
+            G, start_node, goal_node,
+            landmarks=landmarks
         )
+
     else:
-        raise ValueError(f"Unknown algorithm: {algo_name}")
+        raise ValueError("Unknown algorithm: " + algo_name)
 
-    end_time = time.time()
-    duration = end_time - start_time
+    time_sec = time.time() - start_time
+    total_cost = compute_total_cost(G, path)
+    nodes_popped = len(visited)
+    path_length = len(path)
 
-    # Tính tổng trọng số đường đi
-    total_weight = 0
-    for i in range(len(path)-1):
-        total_weight += G[path[i]][path[i+1]].get("weight", 1)
-
-    result = {
-        "time_sec": duration,
-        "nodes_expanded": len(visited),
-        "total_weight": total_weight,
-        "path_length": len(path),
+    return {
+        "total_cost": total_cost,
+        "time_sec": time_sec,
+        "nodes_popped": nodes_popped,
+        "path_length": path_length,
         "path": path
     }
-    return result
 
-def benchmark_all(G, start_node, goal_node, landmarks=None, landmark_distances=None):
-    """
-    Chạy benchmark cho 4 thuật toán chính
-    """
+
+def benchmark_all(G, start_node, goal_node,
+                  landmarks=None, landmark_distances=None):
+
     results = {}
-    for algo in ["dijkstra", "a_star", "bi_a_star", "alt"]:
+
+    algos = ["dijkstra", "astar", "bi_astar", "alt"]
+
+    for algo in algos:
         if algo == "alt":
-            res = benchmark_algorithm(G, start_node, goal_node, algo, landmarks, landmark_distances)
+            results[algo] = benchmark_algorithm(
+                G, start_node, goal_node,
+                algo,
+                landmarks=landmarks,
+                landmark_distances=landmark_distances
+            )
         else:
-            res = benchmark_algorithm(G, start_node, goal_node, algo)
-        results[algo] = res
+            results[algo] = benchmark_algorithm(G, start_node, goal_node, algo)
+
     return results

@@ -54,9 +54,6 @@ def select_landmarks(G, k=4):
             break
     return landmarks
 
-# ============================================================
-# PRECOMPUTE LANDMARK DISTANCES
-# ============================================================
 def compute_landmark_distances(G, landmarks):
     """
     Precompute distances from landmarks to all nodes and vice versa
