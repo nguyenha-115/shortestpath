@@ -195,5 +195,5 @@ function displayRouteInfo(result) {
   document.getElementById("total_length").innerText =
       "Tổng quãng đường: " + (result.total_length / 1000).toFixed(1) + " km";
   document.getElementById("total_travel_time").innerText =
-      "Thời gian di chuyển: " + Math.round(result.total_travel_time * 60) + " phút";
+      "Thời gian di chuyển: " + Math.round(result.total_travel_time) + " giây";
 }
