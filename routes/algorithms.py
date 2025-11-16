@@ -38,7 +38,7 @@ def find_route():
     vehicle = data.get("vehicle", "car")
     algorithm = data.get("algorithm", "dijkstra")  # Mặc định dùng Dijkstra
 
-    # ✅ Load graph đã build từ weights.geojson
+    # Load graph đã build từ weights.geojson
     G = load_graph(GRAPH_PATH)
 
     orig_node = get_nearest_node(G, start_lat, start_lng, direction_check=True, goal_lat=end_lat, goal_lon=end_lng)

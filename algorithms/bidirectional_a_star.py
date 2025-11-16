@@ -2,21 +2,13 @@ import heapq
 from geopy.distance import geodesic
 
 
-# -------------------------------
-#  PENALTY FUNCTION (Bạn có thể sửa tuỳ bài toán)
-# -------------------------------
+
 def transfer_penalty(node, G):
-    """
-    Penalty tại node để mô phỏng chi phí chuyển tuyến.
-    Bạn có thể thay đổi hàm này cho phù hợp với bài nghiên cứu.
-    """
     degree = len(list(G.neighbors(node)))
-    return degree * 0.3     # hệ số 0.3 có thể tinh chỉnh
+    return degree * 0.3    
 
 
-# -------------------------------
 #  GEODESIC HEURISTIC
-# -------------------------------
 def heuristic(node, target, G):
     """
     Heuristic sử dụng khoảng cách địa lý (geodesic).
@@ -27,17 +19,8 @@ def heuristic(node, target, G):
     ).meters
 
 
-# -------------------------------
 #  BIDIRECTIONAL A*
-# -------------------------------
 def bidirectional_a_star_with_penalty(G, orig_node, dest_node):
-    """
-    Thuật toán Bi-A* 2 chiều có bổ sung transfer penalty.
-    Trả về:
-        - path: đường đi ngắn nhất
-        - visited: các node đã duyệt
-        - edges: danh sách cạnh đã relax (debug/visualization)
-    """
 
     # Priority queues cho forward và backward
     forward_queue = [(0, orig_node)]
@@ -59,14 +42,9 @@ def bidirectional_a_star_with_penalty(G, orig_node, dest_node):
     meet_node = None
     edges = []
 
-    # -------------------------------
-    #  MAIN LOOP
-    # -------------------------------
     while forward_queue and backward_queue:
 
-        # =========================
-        #       EXPAND FORWARD
-        # =========================
+        # EXPAND FORWARD
         _, current_f = heapq.heappop(forward_queue)
         visited_forward.add(current_f)
 
@@ -91,9 +69,7 @@ def bidirectional_a_star_with_penalty(G, orig_node, dest_node):
                 heapq.heappush(forward_queue, (priority, nb))
                 edges.append((current_f, nb))
 
-        # =========================
-        #       EXPAND BACKWARD
-        # =========================
+        # EXPAND BACKWARD
         _, current_b = heapq.heappop(backward_queue)
         visited_backward.add(current_b)
 
@@ -118,15 +94,12 @@ def bidirectional_a_star_with_penalty(G, orig_node, dest_node):
                 heapq.heappush(backward_queue, (priority, nb))
                 edges.append((current_b, nb))
 
-    # -------------------------------
-    #  NẾU KHÔNG GẶP NHAU → FAIL
-    # -------------------------------
+
+    # NẾU KHÔNG GẶP NHAU → FAIL
     if meet_node is None:
         return [], list(visited_forward | visited_backward), edges
 
-    # -------------------------------
-    #  RECONSTRUCT FORWARD PATH
-    # -------------------------------
+
     forward_path = []
     node = meet_node
     while node in came_forward:
@@ -135,18 +108,14 @@ def bidirectional_a_star_with_penalty(G, orig_node, dest_node):
     forward_path.append(orig_node)
     forward_path.reverse()
 
-    # -------------------------------
-    #  RECONSTRUCT BACKWARD PATH
-    # -------------------------------
+
     backward_path = []
     node = meet_node
     while node in came_backward:
         node = came_backward[node]
         backward_path.append(node)
 
-    # -------------------------------
-    #  FULL FINAL PATH
-    # -------------------------------
+
     full_path = forward_path + backward_path
 
     return full_path, list(visited_forward | visited_backward), edges

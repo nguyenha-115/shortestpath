@@ -2,15 +2,10 @@ import heapq
 import random
 import networkx as nx
 
-# ===========================
-# TRANSFER PENALTY
-# ===========================
+
 def transfer_penalty(node, G, coef=0.3):
     return G.degree(node) * coef
 
-# ===========================
-# ALT HEURISTIC
-# ===========================
 def alt_heuristic(v, t, landmarks, dist_L_to_v, dist_v_to_L):
     h_value = 0
     for L in landmarks:
@@ -19,9 +14,6 @@ def alt_heuristic(v, t, landmarks, dist_L_to_v, dist_v_to_L):
         h_value = max(h_value, h1, h2)
     return h_value
 
-# ===========================
-# PRECOMPUTE DISTANCES
-# ===========================
 def compute_landmark_distances(G, landmarks):
     dist_L_to_v = {}
     dist_v_to_L = {}
@@ -30,9 +22,6 @@ def compute_landmark_distances(G, landmarks):
         dist_v_to_L[L] = nx.single_source_dijkstra_path_length(G.reverse(copy=False), L, weight="weight")
     return dist_L_to_v, dist_v_to_L
 
-# ===========================
-# CHỌN LANDMARK TỰ ĐỘNG
-# ===========================
 def select_landmarks(G, k=4):
     k_hub = k // 2
     k_periphery = k - k_hub
@@ -53,9 +42,6 @@ def select_landmarks(G, k=4):
 
     return landmarks
 
-# ===========================
-# ALT A* WITH PENALTY
-# ===========================
 def alt_a_star_with_penalty(G, orig_node, dest_node, landmarks,
                             dist_L_to_v, dist_v_to_L):
     queue = [(0, orig_node)]
@@ -95,9 +81,6 @@ def alt_a_star_with_penalty(G, orig_node, dest_node, landmarks,
     path.reverse()
     return path, visited_nodes, edges
 
-# ===========================
-# MINH HỌA
-# ===========================
 if __name__ == "__main__":
     G = nx.DiGraph()
     edges = [
