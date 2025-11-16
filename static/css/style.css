@@ -1,0 +1,117 @@
+/* Cho toàn bộ body/html full screen */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Bản đồ luôn phủ hết */
+#map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Control panel xuống góc dưới phải */
+#controls {
+  position: absolute;
+  top: 10px;              /* cách mép trên 10px */
+  right: 10px;            /* cách mép phải 10px */
+  z-index: 1000;          /* đảm bảo nổi trên bản đồ */
+  background-color: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  max-width: 300px;
+}
+
+
+/* Phần còn lại giữ nguyên phong cách của bạn */
+#controls p {
+    margin-top: 0;
+    font-weight: 600;
+}
+
+#controls label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+#controls select,
+#controls button {
+    width: 100%;
+    padding: 8px;
+    margin: 6px 0 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease-in-out;
+}
+
+#controls button {
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#controls button:hover {
+    background-color: #3367d6;
+}
+
+/* Box điều kiện */
+.condition-box {
+    flex: 1 1 45%;
+    text-align: center;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #f0f0f0;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 0.2s, transform 0.2s;
+    user-select: none;
+}
+
+.condition-box:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+/* === KẾT QUẢ TÌM ĐƯỜNG === */
+#total_length, #total_travel_time {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 20px;
+    color: #333;
+    background-color: #f0f0f0;
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+
+.condition-box.normal   { background-color: #dff0d8; }
+.condition-box.jam      { background-color: #f2dede; }
+.condition-box.flooded  { background-color: #d9edf7; }
+.condition-box.not-allowed { background-color: #fcf8e3; }
+#route-result {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    z-index: 1001;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    padding: 12px 18px;
+    min-width: 220px;
+    text-align: left;
+}
+
