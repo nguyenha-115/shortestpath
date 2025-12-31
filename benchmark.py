@@ -1,11 +1,3 @@
-"""
-Benchmark cho 4 thuật toán:
-- Dijkstra với transfer penalty
-- A* với transfer penalty
-- Bidirectional A*
-- ALT A*
-"""
-
 import time
 
 from algorithms.dijkstra import dijkstra_with_penalty
